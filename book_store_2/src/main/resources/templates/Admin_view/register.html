@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Hotel Dashboard Template</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/css/feathericon.min.css">
+    <link rel="stylesheet" href="/assets/plugins/morris/morris.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+
+<body>
+<div class="main-wrapper login-body">
+    <div class="login-wrapper">
+        <div class="container">
+            <div class="loginbox">
+                <div class="login-left"><img class="img-fluid" src="/assets/img/bookStore-logo.jpg" alt="Logo"></div>
+                <div class="login-right">
+                    <div class="login-right-wrap">
+                        <h1 class="mb-3">Register</h1>
+                        <!-- start message success -->
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="messageSuccess"
+                             style="display: none;">
+                            <strong>You!</strong> Register
+                            <a href="#" class="alert-link">Successfully.</a>Back to login page
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- end message success -->
+                        <!-- start message error -->
+                        <div class="alert alert-danger alert-dismissible fade show"
+                             role="alert" id="messageError" style="display: none;">
+                            <strong>Error!</strong> You
+                            <a href="#" class="alert-link">Enter</a> Confirm Password Not Match Password
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- end message error -->
+                        <form
+                                th:action="@{/bookStore/register}"
+                                method="post"
+                                th:object="${account}"
+                        >
+                            <div class="form-group">
+                                <input class="form-control" type="text" placeholder="Name" id="Name"
+                                       th:field="${user.name}" required>
+                                <div th:if="${notValidName}" class="alert alert-danger" role="alert" id="errorName">
+                                    Name: <span th:text="${notValidName}"></span></div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" type="text" placeholder="Phone Number" id="Phone"
+                                       th:field="${user.phoneNumber}" required>
+                                <div th:if="${notValidPhone}" class="alert alert-danger" role="alert" id="errorPhone">
+                                    Phone: <span th:text="${notValidPhone}"></span></div>
+
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="text" placeholder="Email" id="Email"
+                                       th:field="${account.email}" required>
+                                <div th:if="${notValidEmail}" class="alert alert-danger" role="alert" id="errorEmail">
+                                    Email: <span th:text="${notValidEmail}"></span></div>
+
+                                <div th:if="${emailExists}" class="alert alert-danger" role="alert" id="errorEmailExists">
+                                    Email: <span th:text="${emailExists}"></span></div>
+
+                            </div>
+                            <div class="form-group password-wrapper">
+                                <input class="form-control password-input" type="password" placeholder="Password"
+                                       id="Password" th:field="${account.password}" required>
+                                <span class="toggle-password">
+                <i class="fa fa-eye-slash" aria-hidden="true"></i>
+            </span>
+                                <div th:if="${notValidPass}" class="alert alert-danger" role="alert" id="errorPass">
+                                    Password: <span th:text="${notValidPass}"></span></div>
+
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <button class="btn btn-primary btn-block" id="register" type="submit">Register</button>
+                            </div>
+                        </form>
+                        <div class="login-or"><span class="or-line"></span> <span class="span-or">or</span></div>
+                        <div class="social-login"><span>Register with</span> <a href="#" class="facebook"><i
+                                class="fab fa-facebook-f"></i></a><a href="#" class="google"><i
+                                class="fab fa-google"></i></a></div>
+                        <div class="text-center dont-have">Already have an account? <a href="/bookStore/start">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/popper.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/assets/js/script.js"></script>
+<!--	<script src="./js/CRUDS_register.js"></script>-->
+<script>
+    var email = document.getElementById('Email');
+    var password = document.getElementById('Password');
+    var name = document.getElementById('Name');
+    var phone = document.getElementById('Phone');
+    const passwordInput = document.getElementById('Password');
+    const togglePassword = document.querySelector('.toggle-password i');
+
+    email.addEventListener('input', function() {
+        document.getElementById('errorEmail').style.display = 'none';
+        document.getElementById('errorEmailExists').style.display = 'none';
+    });
+
+    password.addEventListener('input', function() {
+       document.getElementById('errorPass').style.display = 'none';
+    });
+
+     phone.addEventListener('input', function() {
+        document.getElementById('errorPhone').style.display = 'none';
+    });
+     name.addEventListener('input', function() {
+        document.getElementById('errorName').style.display = 'none';
+    });
+
+
+
+        togglePassword.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePassword.classList.remove('fa-eye-slash');
+                togglePassword.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                togglePassword.classList.remove('fa-eye');
+                togglePassword.classList.add('fa-eye-slash');
+            }
+        });
+
+
+</script>
+
+</body>
+
+</html>

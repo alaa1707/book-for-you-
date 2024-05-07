@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-container
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: alaa1234
+      MYSQL_DATABASE: bookStore_db
+
+  email-microservice:
+    image: email-notification-microservice:latest
+    container_name: email-notification-container
+    restart: always
+    ports:
+      - "9081:9080"
+    networks:
+      - my-network
+
+  bookstore:
+    image: bookstore:latest
+    container_name: bookstore-container
+    restart: always
+    ports:
+      - "9091:9090"
+    depends_on:
+      - mysql
+      - email-microservice
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookStore_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: alaa1234
+      EMAIL_MICROSERVICE_URL: http://email-microservice:9081
+
+networks:
+  my-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/16
+          gateway: 172.16.0.1
